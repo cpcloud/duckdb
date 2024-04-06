@@ -453,12 +453,8 @@ static bool ConvertColumnTemplated(NumpyAppendData &append_data) {
 
 template <class DUCKDB_T, class NUMPY_T, class CONVERT>
 static bool ConvertColumn(NumpyAppendData &append_data) {
-	auto target_offset = append_data.target_offset;
-	auto target_data = append_data.target_data;
 	auto &idata = append_data.idata;
 
-	auto src_ptr = UnifiedVectorFormat::GetData<DUCKDB_T>(idata);
-	auto out_ptr = reinterpret_cast<NUMPY_T *>(target_data);
 	if (!idata.validity.AllValid()) {
 		if (append_data.pandas) {
 			return ConvertColumnTemplated<DUCKDB_T, NUMPY_T, CONVERT, /*has_nulls=*/true, /*pandas=*/true>(append_data);
