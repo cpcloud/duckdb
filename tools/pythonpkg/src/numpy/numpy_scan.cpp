@@ -176,7 +176,6 @@ void VerifyTypeConstraints(Vector &vec, idx_t count) {
 void NumpyScan::ScanObjectColumn(PyObject **col, idx_t stride, idx_t count, idx_t offset, Vector &out) {
 	// numpy_col is a sequential list of objects, that make up one "column" (Vector)
 	out.SetVectorType(VectorType::FLAT_VECTOR);
-	auto &mask = FlatVector::Validity(out);
 	PythonGILWrapper gil; // We're creating python objects here, so we need the GIL
 
 	if (stride == sizeof(PyObject *)) {
@@ -385,7 +384,6 @@ void NumpyScan::Scan(PandasColumnBindData &bind_data, idx_t count, idx_t offset,
 				tgt_ptr[row] = string_t(PyUtil::PyUnicodeData(val_handle), PyUtil::PyUnicodeGetLength(val_handle));
 			} else {
 				// unicode gunk
-				auto ascii_obj = reinterpret_cast<PyASCIIObject *>(val);
 				auto unicode_obj = reinterpret_cast<PyCompactUnicodeObject *>(val);
 				// compact unicode string: is there utf8 data available?
 				if (unicode_obj->utf8) {
